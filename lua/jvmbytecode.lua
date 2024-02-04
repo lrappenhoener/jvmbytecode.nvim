@@ -5,9 +5,9 @@ local function createwin()
   vim.api.nvim_create_buf(false, true)
   M.buf = vim.api.nvim_get_current_buf()
   M.win = vim.api.nvim_get_current_win()
-  api.nvim_set_option_value('buftype', 'nofile', { buf = M.buf })
-  api.nvim_set_option_value('bufhidden', 'wipe', { buf = M.buf })
-  api.nvim_set_option_value('filetype', 'rapid', { buf = M.buf })
+  vim.api.nvim_set_option_value('buftype', 'nofile', { buf = M.buf })
+  vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = M.buf })
+  vim.api.nvim_set_option_value('filetype', 'rapid', { buf = M.buf })
 end
 
 function M.show()
