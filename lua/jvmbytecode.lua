@@ -2,8 +2,7 @@ local M = {}
 
 local function createwin()
   vim.cmd("vsplit")
-  --vim.api.nvim_create_buf(false, true)
-  M.buf = vim.api.nvim_get_current_buf()
+  M.buf = vim.api.nvim_create_buf(false, true)
   M.win = vim.api.nvim_get_current_win()
   vim.api.nvim_set_option_value('buftype', 'nofile', { buf = M.buf })
   vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = M.buf })
@@ -33,7 +32,7 @@ function M.setup()
   local autocmd = vim.api.nvim_create_autocmd("BufEnter", {
     pattern = "*.java",
     callback = function()
-      vim.api.nvim_set_keymap("n", "<leader>xjb", "<cmd>lua require('jvmbytecode').show()<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap("n", "<leader>xb", "<cmd>lua require('jvmbytecode').show()<CR>", { noremap = true, silent = true })
     end
   })
 end
