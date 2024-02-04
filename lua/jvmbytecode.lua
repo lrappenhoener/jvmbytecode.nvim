@@ -26,7 +26,7 @@ function M.show()
   print (vim.inspect(M))
 
   vim.api.nvim_buf_set_lines(M.buf, 0, -1, false, javap_output_lines)
-  vim.api.nvim_win_set_buf(0, M.buf)
+  --vim.api.nvim_win_set_buf(0, M.buf)
 end
 
 function M.setup()
