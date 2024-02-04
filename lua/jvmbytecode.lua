@@ -1,6 +1,14 @@
 local M = {}
 
-M.buffer = nil
+local function createwin()
+  vim.cmd("vsplit")
+  vim.api.nvim_create_buf(false, true)
+  M.buf = vim.api.nvim_get_current_buf()
+  M.win = vim.api.nvim_get_current_win()
+  api.nvim_set_option_value('buftype', 'nofile', { buf = M.buf })
+  api.nvim_set_option_value('bufhidden', 'wipe', { buf = M.buf })
+  api.nvim_set_option_value('filetype', 'rapid', { buf = M.buf })
+end
 
 function M.show()
   local current_file = vim.fn.expand("%")
@@ -10,20 +18,15 @@ function M.show()
 
   local javap_output = vim.fn.system("javap -v " .. class_file)
   local javap_output_lines = vim.split(javap_output, "\n")
-
-  if M.buffer == nil or not vim.api.nvim_buf_is_valid(M.buffer) then
-    vim.cmd("vsplit")
-    M.buffer = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, javap_output_lines)
-    vim.api.nvim_win_set_buf(0, M.buffer)
-    vim.cmd("setlocal buftype=nofile")
-    vim.cmd("setlocal noswapfile")
-    vim.cmd("setlocal bufhidden=wipe")
-    --vim.cmd("setlocal nomodifiable")
-  else
-    vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, javap_output_lines)
-    vim.api.nvim_win_set_buf(0, M.buffer)
+  
+  if not M.win or not vim.api.nvim_win_is_valid(M.win) then
+     createwin()
   end
+
+  print (vim.inspect(M))
+
+  vim.api.nvim_buf_set_lines(M.buf, 0, -1, false, javap_output_lines)
+  vim.api.nvim_win_set_buf(0, M.buf)
 end
 
 function M.setup()
