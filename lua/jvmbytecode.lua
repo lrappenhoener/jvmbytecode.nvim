@@ -1,31 +1,37 @@
 local M = {}
 
-local function createwin()
-  vim.cmd("vsplit")
-  M.buf = vim.api.nvim_create_buf(false, true)
-  M.win = vim.api.nvim_get_current_win()
-  vim.api.nvim_set_option_value('buftype', 'nofile', { buf = M.buf })
-  vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = M.buf })
-  vim.api.nvim_set_option_value('filetype', 'jvmbytecode', { buf = M.buf })
+local preparewin = function(lines)
+  if M.win == nil or not vim.api.nvim_win_is_valid(M.win) then
+    vim.api.nvim_command("vsplit")
+    M.win = vim.api.nvim_get_current_win()
+    M.buf = vim.api.nvim_create_buf(false, true)
+
+    -- vim.api.nvim_set_option_value('buftype', 'nofile', { buf = M.buf })
+    -- vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = M.buf })
+    -- vim.api.nvim_set_option_value('filetype', 'jvmbytecode', { buf = M.buf })
+
+    vim.api.nvim_win_set_buf(M.win, M.buf)
+  end  
+
+  vim.api.nvim_buf_set_lines(M.buf, 0, -1, false, lines)
+end
+
+local getclassinfo = function(classfile)
+  local javap_output = vim.fn.system("javap -v " .. classfile)
+  return vim.split(javap_output, "\n")
+end
+
+local compile = function(file)
+  vim.cmd("silent !javac " .. file)
 end
 
 function M.show()
   local current_file = vim.fn.expand("%")
   local class_file = vim.fn.fnamemodify(current_file, ":r") .. ".class"
 
-  vim.cmd("silent !javac " .. current_file)
-
-  local javap_output = vim.fn.system("javap -v " .. class_file)
-  local javap_output_lines = vim.split(javap_output, "\n")
-  
-  if not M.win or not vim.api.nvim_win_is_valid(M.win) then
-     createwin()
-  end
-
-  print (vim.inspect(M))
-
-  vim.api.nvim_buf_set_lines(M.buf, 0, -1, false, javap_output_lines)
-  --vim.api.nvim_win_set_buf(0, M.buf)
+  compile(current_file)
+  local classinfo = getclassinfo(class_file)
+  preparewin(classinfo)
 end
 
 function M.setup()
