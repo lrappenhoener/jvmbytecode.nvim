@@ -35,11 +35,10 @@ function M.show()
 end
 
 function M.setup()
-  print ("setup jvmbytecode")
   local autocmd = vim.api.nvim_create_autocmd("FileType", {
     pattern = "java",
     callback = function()
-      print("setup jvmbytecode key mapping")
+      print ("Setup JVM Bytecode Keymapping <leader>xb")
       vim.keymap.set({"n"}, "<leader>xb", "<cmd>lua require('jvmbytecode').show()<CR>", { noremap = true, silent = true, desc = "JVM Bytecode" })
     end
   })
