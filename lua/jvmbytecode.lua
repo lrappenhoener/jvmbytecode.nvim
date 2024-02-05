@@ -38,7 +38,7 @@ function M.setup()
   local autocmd = vim.api.nvim_create_autocmd("BufEnter", {
     pattern = "*.java",
     callback = function()
-      vim.api.nvim_set_keymap("n", "<leader>xb", "<cmd>lua require('jvmbytecode').show()<CR>", { noremap = true, silent = true })
+      vim.keymap.set({"n"}, "<leader>xb", "<cmd>lua require('jvmbytecode').show()<CR>", { noremap = true, silent = true, desc = "JVM Bytecode" })
     end
   })
 end
